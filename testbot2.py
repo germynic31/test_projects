@@ -10,7 +10,7 @@ from random import randint
 bot = telebot.TeleBot(config.TOKEN)
 
 
-# команды и кнопки
+# welcome
 @bot.message_handler(commands=['start'])
 def welcome(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -27,9 +27,9 @@ def welcome(message):
                      parse_mode='html', reply_markup=markup)
 
 
-# команды и ответы
+# commands and buttons
 @bot.message_handler(content_types=['text'])
-def lalala(message):
+def buttons(message):
     if message.chat.type == 'private':
         if message.text == 'Случайное число от 0 до 100':
             bot.send_message(message.chat.id, str(random.randint(0, 100)))
@@ -56,7 +56,7 @@ def lalala(message):
             bot.send_message(message.chat.id, 'Я не знаю что ответить((')
 
 
-# ламбда
+# button "Как дела?"
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
     try:
@@ -66,7 +66,7 @@ def callback_inline(call):
             elif call.data == 'bad':
                 bot.send_message(call.message.chat.id, 'Ну лан')
 
-            # убирание кнопок
+            # edit message
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Как дела?",
                                   reply_markup=None)
 
@@ -74,5 +74,5 @@ def callback_inline(call):
         print(repr(e))
 
 
-# запуск
+# start
 bot.polling(none_stop=True)
